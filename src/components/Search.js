@@ -1,3 +1,4 @@
+import { TextField } from '@material-ui/core';
 import React, { Component } from 'react'
 
 export default class Search extends Component {
@@ -11,18 +12,19 @@ export default class Search extends Component {
         const searchVl = e.target.value;
         this.props.searchVal(searchVl)
     }
-    submit = (e) =>{
+    submit = (e) => {
         e.preventDefault();
-        }
+    }
     render() {
-        console.log(this.state.searchValue)
+        // console.log(this.state.searchValue)
         return (
-            <form onSubmit = {this.submit}>
-                <input type="search" id="input" 
-                className="form-control" 
-                placeholder ="search" 
-                onChange = { this.onSearchValue}/>
-            </form>            
+            <form onSubmit={this.submit} className="search">
+                <TextField type="search" id="input"
+                    className="form-control"
+                    label="Search"
+                    onChange={this.onSearchValue}
+                />
+            </form>
         )
     }
 }

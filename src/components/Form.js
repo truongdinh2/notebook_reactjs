@@ -1,101 +1,150 @@
+
+import { FormControl, FormGroup, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import React, { Component } from 'react';
-import AddFile from './AddFile';
 
 export default class Form extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            txttitle : '',
-            Author : '',
-            content : '',
-            category :'',
-            date : '',
-            exam : [],
-            showPopup: false,
+            txttitle: '',
+            Author: '',
+            content: '',
+            category: '',
+            date: '',
+            exam: [],
+            isNewfile: !this.props.isNewfile,
+            // isNewfile:this.props.isNewfile,
+        }
+    }
+    componentDidMount() {
+        var { rowSelected } = this.props;
+        var { isNewfile } = this.props;
+        // console.log(isNewfile)
+        if (rowSelected) {
+            this.setState({
+                txttitle: rowSelected.txttitle,
+                Author: rowSelected.Author,
+                content: rowSelected.content,
+                category: rowSelected.category,
+                date: rowSelected.date,
+            })
+        }
+        if (isNewfile === true) {
+            this.onReset()
         }
     }
     onHandleChange = (event) => {
         const target = event.target;
         const name = target.name;
         const value = target.value;
-        this.setState({
-            [name] : value,
-            isOnEdit: this.props.onEdit
-        })
+        if (this.props.rowSelected) {
+
         }
+        this.setState({
+            [name]: value,
+            isOnEdit: this.props.onEdit
+        }, function () {
+            console.log(this.state)
+        })
+        // console.log(value)
+    }
     onHandleSubmit = (event) => {
         event.preventDefault();
+        //if (id) update else add user to store{...}
     }
-    addFile = () => {
-        this.setState({showPopup: true});      
-    }
-    cancle = () => {
+    onReset = () => {
+        // this.props.closeDialog();
         this.setState({
-            showPopup: false
+            txttitle: '',
+            Author: '',
+            content: '',
+            category: '',
+            date: '',
         })
     }
-    // onEditF = this.props.onEdit();
-    onEditF() {
-        this.addFile()
+    onSave = () => {
+        this.props.givedFile(this.state);
+        this.setState({
+            isNewfile: false
+        })
     }
+
     render() {
-        // console.log(JSON.stringify(localStorage.getItem("key")))
+        // console.log(this.state.isNewfile)
+        var { txttitle, Author, content, category, date,isNewfile } = this.state
         return (
             <div>
-                <AddFile addFile = {this.addFile}
+                <form onSubmit={this.onHandleSubmit} className="form">
+                    <FormGroup>
+                        <Button id="customized-dialog-title" className="btncls"
+                        onClick={() => { this.props.closeDialog() }}>
+                            close
+                        </Button>
+                    </FormGroup>
+                    <TextField name="txttitle"
+                        label="Work"
+                        value={txttitle}
+                        className="form-control" placeholder="Title"
+                        onChange={this.onHandleChange}
+                    />
+                    <TextField name="Author"
+                        label="Author"
+                        value={Author}
+                        className="form-control"
+                        onChange={this.onHandleChange}
+                    />
+                    <FormGroup>
+                        <TextField
+                            name="date"
+                            className="date"
+                            label="Date"
+                            type="date"
+                            defaultValue="2020-05-24"
+                            value={date}
+                            onChange={this.onHandleChange}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
                         />
-                <div className={this.state.showPopup || this.state.isOnEdit ? 
-                    'active container-addfile' : 'container-addfile'}>
-                    <div id = "addF">
-                        <div className = "tit">
-                            <button id = "x" 
-                            onClick = {this.cancle}>X
-                            </button>
-                            <h2>
-                                Edit Form
-                            </h2>
+                    </FormGroup>
+                    <FormControl>
+                        <InputLabel>{isNewfile ? 'category' :category}</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-outlined-label"
+                            id="demo-simple-select-outlined"
+                            onChange={this.onHandleChange}
+                            label="category"
+                            name="category"
+                            className="category"
+                        >
+                            <MenuItem value={category} sel>
+                                {category}
+                            </MenuItem>
+                            <MenuItem value='action and adventure'>action and adventure</MenuItem>
+                            <MenuItem value='classic'>classic</MenuItem>
+                            <MenuItem value='comic'>comic</MenuItem>
+                            <MenuItem value='khac'>khac</MenuItem>
+                        </Select>
+                        <div id="content">
+                            <small> content</small><br />
+                            <textarea onChange={this.onHandleChange}
+                                name="content" rows="5" cols="50" value={content}></textarea>
                         </div>
-                        <div className="form-group sub">
-                            <form onSubmit = {this.onHandleSubmit}>
-                            <div id = "left">
-                                <label>Title</label>
-                                <input type="text" name = "txttitle"
-                                className="form-control" placeholder="Title"
-                                onChange = {this.onHandleChange} />
-                                <label>Author</label>
-                                <input type="text" onChange = {this.onHandleChange}
-                                className="form-control" placeholder="Author"
-                                name = "Author" />
-                                <p>date</p>
-                                <input name = "date" type = "date" onChange = {this.onHandleChange} />
-                            </div>
-                            <div id = "right">
-                                <div className="form-group">
-                                <select className="form-control" name = "category"
-                                        onChange = {this.onHandleChange} required>
-                                        <option value = "category" selected disabled style = {{color: "GrayText"}}>
-                                        category</option>
-                                        <option value = "action and adventure">action and adventure</option>
-                                        <option value = "classic">classic</option>
-                                        <option value = "comic book">comic book</option>
-                                        <option value = "khac">khac</option>
-                                    </select>
-                                    <div id = "content">
-                                        <small> descript</small><br />
-                                        <textarea onChange = {this.onHandleChange}  
-                                        name ="content" rows = "3" cols = "20"></textarea>
-                                    </div> 
-                                </div>
-                            </div><div className = "save">
-                                <button className = "btn" type = "submit" onClick = {() => this.props.givedFile(this.state)}>
-                                    SAVE</button> &nbsp;
-                                <button className = "btn" type = "reset" style = {{color: "GrayText"}}>RESET</button>
-                            </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                    </FormControl>
+                    <FormGroup className="inline">
+                        <Button className="btn" type="submit" onClick={this.onSave} variant="outlined" color="primary">
+                            SAVE
+                        </Button>
+                        <Button className="btn" type="reset" onClick={this.onReset} variant="outlined" color="primary">
+                            RESET
+                        </Button>
+                    </FormGroup>
+
+                </form>
             </div>
         )
     }
 }
+
+

@@ -1,27 +1,46 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
-export default class Content extends Component {    
+export default class Content extends Component {
     render() {
-        var onRender = this.props.onRender;
+        // var onRender = this.props.onRender;
         var details = this.props.info4;
-        var detail = details.map((detail,index) => {
-            return (
-                <div>
-                    <div className = {onRender ? 'block main' : 'cancle main'}
-                    key = {index}>
-                        <span>Work - <span className = "file">{detail.txttitle}
-                        </span> ,Author-  <span className = "file">{detail.Author}</span></span>
-                        <p>Category: <span className = "file">{detail.category}</span> Date :  
-                        <span className = "file">{detail.date}</span> </p>
-                        <p>Content: </p><p className = "file">{detail.content}</p>
-                    </div>
-                </div>
-            )
-        })
+        console.log(this.props.rowKey)
+        var rowKey = this.props.rowKey;
+        console.log(rowKey)
+        console.log(details[rowKey])
         return (
-            <div>
-                {detail}
-            </div>
+            <table>
+                <thead>
+                    <tr className="th">
+                        <th className="th">Work</th>
+                        <th className="th">Author</th>
+                        <th className="th">Category</th>
+                        <th className="th">Date</th>
+                        <th className="th tbcnt">Content</th>
+                    </tr>
+                </thead>
+                <tbody>
+        
+                    {rowKey !== null ? <tr>
+                        <td >
+                            {details[rowKey].txttitle}
+                        </td>
+                        <td >
+                            {details[rowKey].Author}
+                        </td>
+                        <td >
+                            {details[rowKey].category}
+                        </td>
+                        <td >
+                            {details[rowKey].date}
+                        </td>
+                        <td >
+                            {details[rowKey].content}
+                        </td>
+                    </tr> : <tr></tr>}
+                </tbody>
+            </table>
+
         )
     }
 }
