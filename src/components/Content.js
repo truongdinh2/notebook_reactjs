@@ -20,7 +20,7 @@ export default class Content extends Component {
                     </tr>
                 </thead>
                 <tbody>
-        
+                    {/* <p>aaaaaa</p> */}
                     {rowKey !== null ? <tr>
                         <td >
                             {details[rowKey].txttitle}
